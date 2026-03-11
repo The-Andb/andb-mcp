@@ -34,6 +34,13 @@ export function registerMigrateSchema(server: McpServer) {
           .describe(
             'If true (default), only return the migration SQL without executing. Set to false to execute migration.',
           ),
+        force: z
+          .boolean()
+          .optional()
+          .default(false)
+          .describe(
+            'If true, bypass safety guards for destructive operations (DROP, TRUNCATE, etc.).',
+          ),
       }),
       annotations: {
         readOnlyHint: false,
@@ -69,6 +76,7 @@ export function registerMigrateSchema(server: McpServer) {
           sourceConfig: 'connection' in source ? source.connection : undefined,
           targetConfig: 'connection' in target ? target.connection : undefined,
           dryRun: dryRun !== false, // Default to true
+          force: input.force === true,
         });
 
         const isDry = dryRun !== false;

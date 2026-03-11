@@ -10,7 +10,7 @@
 
 // ⚠️ CRITICAL: Intercept process.stdout.write BEFORE any imports.
 // MCP stdio transport uses stdout exclusively for JSON-RPC messages.
-// NestJS Logger and CoreBridge write directly to process.stdout.write,
+// Framework Logger and CoreBridge write directly to process.stdout.write,
 // bypassing console.log. We must redirect non-JSON output to stderr.
 const origStdoutWrite = process.stdout.write.bind(process.stdout);
 (process.stdout as any).write = (
@@ -24,16 +24,16 @@ const origStdoutWrite = process.stdout.write.bind(process.stdout);
   if (trimmed.startsWith('{') || trimmed.startsWith('Content-Length:')) {
     return origStdoutWrite(chunk, encodingOrCb as any, cb);
   }
-  // Everything else (NestJS logs, CoreBridge emoji logs) goes to stderr
+  // Everything else (Framework logs, CoreBridge emoji logs) goes to stderr
   return process.stderr.write(chunk, encodingOrCb as any, cb);
 };
 
-import 'reflect-metadata';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CoreBridge } from '@the-andb/core';
 import { registerTools } from './tools';
 import { registerResources } from './resources';
+import { registerPrompts } from './prompts';
 
 async function main() {
   // Initialize the core engine (logs go to stderr via redirect above)
@@ -45,9 +45,10 @@ async function main() {
     version: '0.1.0',
   });
 
-  // Register all tools and resources
+  // Register all tools, resources, and prompts
   registerTools(server);
   registerResources(server);
+  registerPrompts(server);
 
   // Connect via stdio transport
   const transport = new StdioServerTransport();

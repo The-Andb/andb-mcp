@@ -31,7 +31,7 @@ export function registerGetDbStatus(server: McpServer) {
           throw new Error(`No connection configured for environment: ${payload.env}`);
         }
 
-        const driver = await orchestrator.getDriverFromConnection(connection);
+        const driver = await (orchestrator as any).schemaOrchestrator.getDriverFromConnection(connection);
         await driver.connect();
 
         try {
