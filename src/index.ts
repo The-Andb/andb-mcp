@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * andb-mcp - MCP Server for The Andb
+ * andb-mcp - MCP Server for TheAndb
  *
  * Exposes database schema management tools via the Model Context Protocol,
  * allowing AI clients (Claude, Cursor, etc.) to interact with databases
- * through The Andb core engine.
+ * through TheAndb core engine.
  */
 
 // ⚠️ CRITICAL: Intercept process.stdout.write BEFORE any imports.

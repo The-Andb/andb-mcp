@@ -1,14 +1,14 @@
 {
   "name": "@the-andb/mcp",
-  "version": "4.0.0",
-  "description": "The Andb - Simplest Database Migration Tool",
+  "version": "4.0.1",
+  "description": "TheAndb - Simplest Database Migration Tool",
   "main": "dist/index.js",
   "bin": {
     "andb-mcp": "./dist/index.js"
   },
   "type": "commonjs",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "node scripts/build.mjs",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js"
   },
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.10",
+    "esbuild": "^0.27.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
