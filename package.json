@@ -1,7 +1,7 @@
 {
   "name": "@the-andb/mcp",
   "version": "4.0.1",
-  "description": "TheAndb - Simplest Database Migration Tool",
+  "description": "TheAndb - Keep Going. Keep Syncing.",
   "main": "dist/index.js",
   "bin": {
     "andb-mcp": "./dist/index.js"
