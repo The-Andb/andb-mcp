@@ -1,38 +1,19 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z } from 'zod';
-import { CoreBridge } from '@the-andb/core';
-import { ConnectionInputSchema, resolveConnectionPayload } from './schemas';
+import { exportSchemaTool, CoreBridge } from '@the-andb/core';
 
 export function registerExportSchema(server: McpServer) {
   server.registerTool(
-    'export_schema',
+    exportSchemaTool.name,
     {
-      title: 'Export Schema',
-      description:
-        'Export database schema DDL to local files. Exports all object definitions (tables, views, procedures, functions, triggers, events) from the specified environment.',
-      inputSchema: z.intersection(
-        ConnectionInputSchema,
-        z.object({
-          objectType: z
-            .enum(['table', 'view', 'procedure', 'function', 'trigger', 'event'])
-            .optional()
-            .describe('Export only specific object type (default: all types)'),
-        }),
-      ),
-      annotations: {
-        readOnlyHint: true,
-      },
+      description: exportSchemaTool.description,
+      inputSchema: exportSchemaTool.inputSchema as any,
     },
-    async (input: any) => {
+    async (input) => {
+      const orchestrator = CoreBridge.getSchemaOrchestrator();
+      const config = CoreBridge.getConfig();
+      
       try {
-        const payload = resolveConnectionPayload(input);
-
-        const result = await CoreBridge.execute('export', {
-          env: payload.env,
-          type: input.objectType,
-          targetConfig: 'connection' in input ? input.connection : undefined,
-        });
-
+        const result = await exportSchemaTool.handler(input, { orchestrator, config });
         return {
           content: [
             {
@@ -44,7 +25,7 @@ export function registerExportSchema(server: McpServer) {
                   details: result,
                 },
                 null,
-                2,
+                2
               ),
             },
           ],
@@ -60,6 +41,6 @@ export function registerExportSchema(server: McpServer) {
           isError: true,
         };
       }
-    },
+    }
   );
 }

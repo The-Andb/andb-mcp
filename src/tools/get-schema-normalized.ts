@@ -1,29 +1,19 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z } from 'zod';
-import { CoreBridge } from '@the-andb/core';
+import { getSchemaNormalizedTool, CoreBridge } from '@the-andb/core';
 
 export function registerGetSchemaNormalized(server: McpServer) {
   server.registerTool(
-    'get_schema_normalized',
+    getSchemaNormalizedTool.name,
     {
-      title: 'Get Normalized Schema',
-      description: 'Fetch the entire database schema in a normalized SQL format. This is optimized for AI agents to reason about the database structure efficiently.',
-      inputSchema: z.object({
-        env: z.string().describe('Environment name from andb.yaml'),
-        database: z.string().optional().describe('Database name (default: default)'),
-      }),
-      annotations: {
-        readOnlyHint: true,
-      },
+      description: getSchemaNormalizedTool.description,
+      inputSchema: getSchemaNormalizedTool.inputSchema as any,
     },
-    async (input: { env: string; database?: string }) => {
+    async (input) => {
+      const orchestrator = CoreBridge.getOrchestrator();
+      const config = CoreBridge.getConfig();
+      
       try {
-        const { env, database } = input;
-
-        const result = await CoreBridge.execute('getSchemaNormalized', {
-          env,
-          db: database || 'default',
-        });
+        const result = await getSchemaNormalizedTool.handler(input, { orchestrator, config });
 
         return {
           content: [

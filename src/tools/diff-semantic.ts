@@ -1,33 +1,19 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z } from 'zod';
-import { CoreBridge } from '@the-andb/core';
+import { diffSemanticTool, CoreBridge } from '@the-andb/core';
 
 export function registerDiffSemantic(server: McpServer) {
   server.registerTool(
-    'diff_semantic',
+    diffSemanticTool.name,
     {
-      title: 'Semantic Schema Diff',
-      description: 'Perform a deep, semantic comparison between two tables using AST analysis. Identifies specifically what changed (datatype, nullability, defaults) in a human-readable way.',
-      inputSchema: z.object({
-        source: z.object({
-          env: z.string().describe('Source environment name from andb.yaml'),
-        }),
-        target: z.object({
-          env: z.string().describe('Target environment name from andb.yaml'),
-        }),
-        tableName: z.string().describe('The name of the table to compare'),
-      }),
+      description: diffSemanticTool.description,
+      inputSchema: diffSemanticTool.inputSchema as any,
     },
-    async (input: { source: { env: string }; target: { env: string }; tableName: string }) => {
+    async (input) => {
+      const orchestrator = CoreBridge.getSchemaOrchestrator();
+      const config = CoreBridge.getConfig();
+      
       try {
-        const { source, target, tableName } = input;
-
-        const result = await CoreBridge.execute('semanticCompare', {
-          srcEnv: source.env,
-          destEnv: target.env,
-          name: tableName,
-          type: 'TABLE'
-        });
+        const result = await diffSemanticTool.handler(input, { orchestrator, config });
 
         return {
           content: [

@@ -1,16 +1,16 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { listSchemaObjectsTool, CoreBridge } from '@the-andb/core';
+import { dataHealthCheckTool, CoreBridge } from '@the-andb/core';
 
-export function registerListSchemaObjects(server: McpServer) {
+export function registerDataHealthCheck(server: McpServer) {
   server.registerTool(
-    listSchemaObjectsTool.name,
+    dataHealthCheckTool.name,
     {
-      description: listSchemaObjectsTool.description,
-      inputSchema: listSchemaObjectsTool.inputSchema as any,
+      description: dataHealthCheckTool.description,
+      inputSchema: dataHealthCheckTool.inputSchema as any,
     },
     async (input) => {
       const orchestrator = CoreBridge.getSchemaOrchestrator();
-      const result = await listSchemaObjectsTool.handler(input, { orchestrator });
+      const result = await dataHealthCheckTool.handler(input, { orchestrator });
       return {
         content: [
           {
