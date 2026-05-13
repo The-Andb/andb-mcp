@@ -1,6 +1,6 @@
 {
   "name": "@the-andb/mcp",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "TheAndb - Keep Going. Keep Syncing.",
   "main": "dist/index.js",
   "bin": {
