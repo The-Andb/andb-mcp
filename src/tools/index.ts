@@ -13,6 +13,7 @@ import { registerGetSchemaNormalized } from './get-schema-normalized';
 import { registerInspectQuery } from './inspect-query';
 import { registerDataHealthCheck } from './data-health-check';
 import { registerGetWorkspaceSummary } from './get-workspace-summary';
+import { registerAppControl } from './app-control';
 
 export function registerTools(server: McpServer) {
   registerTestConnection(server);
@@ -29,6 +30,7 @@ export function registerTools(server: McpServer) {
   registerInspectQuery(server);
   registerDataHealthCheck(server);
   registerGetWorkspaceSummary(server);
+  registerAppControl(server);
 }
 
 // Export all tools for direct AI integration in andb-core
@@ -46,3 +48,4 @@ export * from './get-schema-normalized';
 export * from './inspect-query';
 export * from './data-health-check';
 export * from './get-workspace-summary';
+export * from './app-control';
